@@ -131,7 +131,7 @@ DAEA-sem11/
 │   ├── appsettings.json               # Cadena de conexión a SQL Server
 │   └── Program.cs                     # Inyección de dependencias y semillero de datos
 ├── .gitignore
-├── lab11-daea.md
+|
 └── README.md
 ```
 
@@ -199,13 +199,3 @@ La consola indicará el puerto local activo:
 
 ---
 
-## 📋 Comandos Git para Subir el Proyecto
-
-```bash
-git init
-git add .
-git commit -m "Laboratorio 11: Implementación completa EF Core Code First en .NET 10"
-git branch -M main
-git remote add origin https://github.com/Dorian-devw/DAEA-lab11.git
-git push -u origin main
-```
