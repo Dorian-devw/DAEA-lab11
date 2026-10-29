@@ -1,0 +1,63 @@
+@model Eventos.Web.Models.Evento
+
+@{
+    ViewData["Title"] = "Eliminar Evento";
+    int inscritosConfirmados = ViewBag.InscritosConfirmados ?? 0;
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="card shadow-sm border-danger rounded-3 overflow-hidden">
+                <div class="card-header bg-danger text-white py-3 px-4">
+                    <h4 class="mb-0 fw-bold"><i class="bi bi-exclamation-triangle-fill me-2"></i>Confirmar Eliminación Lógica</h4>
+                </div>
+                <div class="card-body p-4">
+                    <div class="alert alert-warning d-flex align-items-center">
+                        <i class="bi bi-info-circle-fill fs-4 me-2"></i>
+                        <div>
+                            Esta acción realizará una <strong>eliminación lógica</strong> (el evento pasará a Activo = false). No se borrará físicamente de la base de datos.
+                        </div>
+                    </div>
+
+                    <h4 class="fw-bold text-dark mb-3">@Model.Titulo</h4>
+
+                    <dl class="row mb-4">
+                        <dt class="col-sm-4 text-muted">Categoría:</dt>
+                        <dd class="col-sm-8 fw-semibold">@Model.Categoria?.Nombre</dd>
+
+                        <dt class="col-sm-4 text-muted">Modalidad:</dt>
+                        <dd class="col-sm-8"><span class="badge bg-dark">@Model.Modalidad</span></dd>
+
+                        <dt class="col-sm-4 text-muted">Fecha y Hora:</dt>
+                        <dd class="col-sm-8">@Model.Fecha.ToString("dd/MM/yyyy HH:mm") hrs</dd>
+
+                        <dt class="col-sm-4 text-muted">Lugar:</dt>
+                        <dd class="col-sm-8">@Model.Lugar</dd>
+
+                        <dt class="col-sm-4 text-muted">Aforo:</dt>
+                        <dd class="col-sm-8">@Model.Aforo personas</dd>
+
+                        <dt class="col-sm-4 text-muted">Inscritos:</dt>
+                        <dd class="col-sm-8 text-primary fw-bold">@inscritosConfirmados inscritos confirmados</dd>
+
+                        <dt class="col-sm-4 text-muted">Precio:</dt>
+                        <dd class="col-sm-8">S/ @Model.Precio.ToString("N2")</dd>
+                    </dl>
+
+                    <form asp-action="Delete" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="Id" />
+                        <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-danger fw-bold px-4">
+                                <i class="bi bi-trash-fill me-1"></i> Confirmar Eliminación
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

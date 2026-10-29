@@ -1,0 +1,104 @@
+@model IEnumerable<Eventos.Web.Models.Inscripcion>
+
+@{
+    ViewData["Title"] = "Gestión de Inscripciones";
+}
+
+<div class="container py-5">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-dark mb-1"><i class="bi bi-card-checklist me-2 text-warning"></i>Inscripciones a Eventos</h2>
+            <p class="text-muted mb-0">Control y registro de inscripciones, estados y cancelaciones</p>
+        </div>
+        <a asp-action="Create" class="btn btn-warning fw-bold px-4 py-2 mt-2 mt-sm-0 text-dark">
+            <i class="bi bi-ticket-perforated-fill me-1"></i> Nueva Inscripción
+        </a>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th class="ps-4">#</th>
+                            <th>Evento</th>
+                            <th>Asistente</th>
+                            <th>DNI Asistente</th>
+                            <th>Fecha Inscripción</th>
+                            <th>Estado</th>
+                            <th class="text-end pe-4">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="7" class="text-center py-5 text-muted">
+                                    <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                    No se han registrado inscripciones en el sistema.
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="ps-4 text-muted small">@item.Id</td>
+                                    <td>
+                                        <div class="fw-bold text-dark">@item.Evento?.Titulo</div>
+                                        <span class="small text-muted">
+                                            <i class="bi bi-calendar3 me-1"></i>@item.Evento?.Fecha.ToString("dd/MM/yyyy HH:mm") hrs 
+                                            &bull; @item.Evento?.Modalidad
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="fw-semibold">@item.Asistente?.Nombres</div>
+                                        <span class="small text-muted">@item.Asistente?.Correo</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-light text-dark border">@item.Asistente?.Dni</span>
+                                    </td>
+                                    <td>
+                                        @item.FechaInscripcion.ToString("dd/MM/yyyy HH:mm")
+                                    </td>
+                                    <td>
+                                        @if (item.Estado == "Confirmada")
+                                        {
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2">
+                                                <i class="bi bi-check2-circle me-1"></i>Confirmada
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-3 py-2">
+                                                <i class="bi bi-x-circle me-1"></i>Cancelada
+                                            </span>
+                                        }
+                                    </td>
+                                    <td class="text-end pe-4">
+                                        @if (item.Estado == "Confirmada")
+                                        {
+                                            <form asp-action="Cancelar" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('¿Está seguro de cancelar esta inscripción?');">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Cancelar inscripción">
+                                                    <i class="bi bi-x-circle"></i> Cancelar
+                                                </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted small fst-italic">Sin acciones</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

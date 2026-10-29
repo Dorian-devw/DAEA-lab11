@@ -1,0 +1,430 @@
+@{
+    bool esAdmin = Context.Session.GetString("ModoAdmin") == "true";
+    string currentUrl = Context.Request.Path + Context.Request.QueryString;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - FSINCA EVENTS</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- Iconos locales: 0 segundos de espera -->
+    <link rel="stylesheet" href="~/css/bootstrap-icons.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        :root {
+            --fsinca-yellow: #f8df3e;
+            --fsinca-orange: #ea580c;
+            --fsinca-orange-hover: #c2410c;
+            --fsinca-dark: #18181b;
+            --fsinca-card-bg: #ffffff;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #fafafa;
+            color: #27272a;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+        }
+
+        main[role="main"] {
+            flex: 1 0 auto;
+        }
+
+        .fsinca-header-bar {
+            border-bottom: 1px solid #e4e4e7;
+            background: #fff;
+        }
+
+        .fsinca-nav-grid {
+            display: flex;
+            align-items: stretch;
+            justify-content: space-between;
+            min-height: 58px;
+        }
+
+        .fsinca-brand-box {
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            border-right: 1px solid #e4e4e7;
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: #111827;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .fsinca-brand-box span.brand-accent {
+            color: var(--fsinca-orange);
+            font-weight: 900;
+        }
+
+        .fsinca-nav-links {
+            display: flex;
+            align-items: stretch;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .fsinca-nav-item {
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            border-right: 1px solid #e4e4e7;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #3f3f46;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .fsinca-nav-item:hover, .fsinca-nav-item.active {
+            color: #000;
+            background-color: #f4f4f5;
+        }
+
+        .fsinca-register-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--fsinca-orange);
+            color: #fff !important;
+            padding: 0 28px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            transition: background-color 0.2s ease;
+        }
+
+        .fsinca-register-btn:hover {
+            background-color: var(--fsinca-orange-hover);
+            color: #fff;
+        }
+
+        .admin-toggle-btn {
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-decoration: none;
+            border-right: 1px solid #e4e4e7;
+            color: #52525b;
+            transition: background 0.2s;
+        }
+
+        .admin-toggle-btn:hover {
+            background: #f4f4f5;
+            color: #18181b;
+        }
+
+        .admin-active-strip {
+            background-color: #18181b;
+            color: #f8df3e;
+            font-size: 0.8rem;
+            padding: 6px 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Hero Banner */
+        .fsinca-hero {
+            background-color: #fff;
+            padding: 45px 20px 30px;
+            text-align: center;
+            border-bottom: 1px solid #e4e4e7;
+        }
+
+        .fsinca-main-title {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 3.2rem;
+            font-weight: 900;
+            letter-spacing: 4px;
+            color: #18181b;
+            margin-bottom: 14px;
+        }
+
+        .fsinca-subtitle-pill {
+            display: inline-block;
+            border: 1px solid #27272a;
+            padding: 6px 28px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #27272a;
+        }
+
+        /* Yellow Section */
+        .fsinca-yellow-section {
+            background-color: var(--fsinca-yellow);
+            padding: 40px 0 70px;
+            min-height: calc(100vh - 280px);
+        }
+
+        .fsinca-categories-title {
+            font-size: 2.1rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #000;
+            margin-bottom: 24px;
+            display: inline-block;
+            border: 2px solid #000;
+            padding: 4px 16px;
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .category-pill {
+            display: inline-block;
+            padding: 8px 22px;
+            border-radius: 9999px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1.5px solid #000;
+            background-color: #fff;
+            color: #000;
+            margin: 4px;
+        }
+
+        .category-pill:hover, .category-pill.active {
+            background-color: #000;
+            color: #fff;
+        }
+
+        /* Cards */
+        .fsinca-card {
+            background: #fff;
+            border: 1.5px solid #18181b;
+            border-radius: 6px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .fsinca-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+        }
+
+        .fsinca-card-img-wrapper {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #18181b 0%, #3f3f46 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .fsinca-card-body {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .fsinca-venue-tag {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #71717a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .fsinca-card-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #18181b;
+            line-height: 1.35;
+            margin-bottom: 12px;
+            min-height: 2.7em;
+        }
+
+        .fsinca-card-footer-strip {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: auto;
+            padding-top: 14px;
+            border-top: 1px dashed #e4e4e7;
+        }
+
+        .fsinca-price-badge {
+            background-color: var(--fsinca-orange);
+            color: #fff;
+            font-weight: 800;
+            font-size: 0.85rem;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            display: inline-block;
+        }
+
+        .fsinca-category-tag {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #52525b;
+            font-style: italic;
+        }
+
+        .fsinca-cupos-info {
+            font-size: 0.78rem;
+            color: #3f3f46;
+            margin-bottom: 10px;
+            display: flex;
+            gap: 12px;
+        }
+
+        footer {
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+    @if (esAdmin)
+    {
+        <!-- Barra de estado cuando está en Modo Administrador -->
+        <div class="admin-active-strip">
+            <div>
+                <i class="bi bi-shield-lock-fill me-2"></i>
+                <span>ESTÁS EN <strong>MODO ADMINISTRADOR</strong> (Edición, Eliminación y Gestión activa)</span>
+            </div>
+            <a asp-controller="Home" asp-action="ToggleModo" asp-route-returnUrl="@currentUrl" class="btn btn-sm btn-outline-warning text-white border-white">
+                <i class="bi bi-person me-1"></i>Cambiar a Vista de Asistente
+            </a>
+        </div>
+    }
+
+    <header class="fsinca-header-bar sticky-top shadow-sm">
+        <div class="container-fluid px-0">
+            <div class="fsinca-nav-grid">
+                <!-- Brand Logo -->
+                <a class="fsinca-brand-box" asp-controller="Eventos" asp-action="Index">
+                    <span>fsinca<span class="brand-accent">events</span></span>
+                </a>
+
+                <!-- Navigation Links -->
+                <nav class="d-none d-md-flex">
+                    <ul class="fsinca-nav-links">
+                        <li>
+                            <a class="fsinca-nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Eventos" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")" 
+                               asp-controller="Eventos" asp-action="Index">
+                                <i class="bi bi-calendar2-event me-2"></i>Eventos
+                            </a>
+                        </li>
+
+                        @if (esAdmin)
+                        {
+                            <!-- Solo visible para Administrador (Opción B) -->
+                            <li>
+                                <a class="fsinca-nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Asistentes" ? "active" : "")" 
+                                   asp-controller="Asistentes" asp-action="Index">
+                                    <i class="bi bi-people me-2"></i>Asistentes
+                                </a>
+                            </li>
+                            <li>
+                                <a class="fsinca-nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Inscripciones" ? "active" : "")" 
+                                   asp-controller="Inscripciones" asp-action="Index">
+                                    <i class="bi bi-card-checklist me-2"></i>Inscripciones
+                                </a>
+                            </li>
+                            <li>
+                                <a class="fsinca-nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Eventos" && ViewContext.RouteData.Values["action"]?.ToString() == "Create" ? "active" : "")" 
+                                   asp-controller="Eventos" asp-action="Create">
+                                    <i class="bi bi-plus-circle me-2"></i>Nuevo Evento
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+
+                <div class="d-flex align-items-stretch">
+                    @if (!esAdmin)
+                    {
+                        <!-- Botón para alternar a modo admin -->
+                        <a asp-controller="Home" asp-action="ToggleModo" asp-route-returnUrl="@currentUrl" class="admin-toggle-btn" title="Activar modo administrador para gestionar">
+                            <i class="bi bi-gear-fill me-1"></i> Modo Admin
+                        </a>
+                    }
+
+                    <!-- Action CTA Inscribirse -->
+                    <a class="fsinca-register-btn" asp-controller="Inscripciones" asp-action="Create">
+                        <i class="bi bi-ticket-perforated me-2"></i>Inscribirse
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Top Alert Messages (TempData) -->
+    @if (TempData["Exito"] != null)
+    {
+        <div class="container mt-3">
+            <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm d-flex align-items-center" role="alert">
+                <i class="bi bi-check-circle-fill fs-5 me-2 text-success"></i>
+                <div>@TempData["Exito"]</div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="container mt-3">
+            <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm d-flex align-items-center" role="alert">
+                <i class="bi bi-exclamation-triangle-fill fs-5 me-2 text-danger"></i>
+                <div>@TempData["Error"]</div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    }
+
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer class="bg-dark text-white py-4 mt-auto">
+        <div class="container text-center text-md-start">
+            <div class="row align-items-center">
+                <div class="col-md-6 mb-2 mb-md-0">
+                    <h5 class="fw-bold mb-1 text-white">FSINCA EVENTS</h5>
+                    <p class="text-white-50 mb-0 small">Desarrollo de Aplicaciones Empresariales Avanzadas - Semana 11</p>
+                </div>
+                <div class="col-md-6 text-md-end text-white-50 small">
+                    Estudiante: <strong class="text-white">Frank Sinca</strong> 
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
